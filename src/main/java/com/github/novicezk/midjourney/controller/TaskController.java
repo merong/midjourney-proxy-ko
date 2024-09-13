@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Api(tags = "任务查询")
+@Api(tags = "작업 쿼리")
 @RestController
 @RequestMapping("/task")
 @RequiredArgsConstructor
@@ -33,15 +33,15 @@ public class TaskController {
 	private final TaskStoreService taskStoreService;
 	private final DiscordLoadBalancer discordLoadBalancer;
 
-	@ApiOperation(value = "指定ID获取任务")
+	@ApiOperation(value = "지정된 ID로 작업 가져오기")
 	@GetMapping("/{id}/fetch")
-	public Task fetch(@ApiParam(value = "任务ID") @PathVariable String id) {
+	public Task fetch(@ApiParam(value = "작업 ID") @PathVariable String id) {
 		Optional<Task> queueTaskOptional = this.discordLoadBalancer.getQueueTasks().stream()
 				.filter(t -> CharSequenceUtil.equals(t.getId(), id)).findFirst();
 		return queueTaskOptional.orElseGet(() -> this.taskStoreService.get(id));
 	}
 
-	@ApiOperation(value = "查询任务队列")
+	@ApiOperation(value = "쿼리 작업 대기열")
 	@GetMapping("/queue")
 	public List<Task> queue() {
 		return this.discordLoadBalancer.getQueueTasks().stream()
@@ -49,7 +49,7 @@ public class TaskController {
 				.toList();
 	}
 
-	@ApiOperation(value = "查询所有任务")
+	@ApiOperation(value = "모든 작업 쿼리")
 	@GetMapping("/list")
 	public List<Task> list() {
 		return this.taskStoreService.list().stream()
@@ -57,7 +57,7 @@ public class TaskController {
 				.toList();
 	}
 
-	@ApiOperation(value = "根据ID列表查询任务")
+	@ApiOperation(value = "ID 목록 기반 쿼리 작업")
 	@PostMapping("/list-by-condition")
 	public List<Task> listByIds(@RequestBody TaskConditionDTO conditionDTO) {
 		if (conditionDTO.getIds() == null) {

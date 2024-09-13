@@ -8,18 +8,18 @@ import lombok.EqualsAndHashCode;
 
 
 @Data
-@ApiModel("变化任务提交参数")
+@ApiModel("Change Task Submit Parameters (변경 작업 제출 매개변수)")
 @EqualsAndHashCode(callSuper = true)
 public class SubmitChangeDTO extends BaseSubmitDTO {
 
-	@ApiModelProperty(value = "任务ID", required = true, example = "\"1320098173412546\"")
+	@ApiModelProperty(value = "Task ID (작업 ID)", required = true, example = "\"1320098173412546\"")
 	private String taskId;
 
-	@ApiModelProperty(value = "UPSCALE(放大); VARIATION(变换); REROLL(重新生成)", required = true,
+	@ApiModelProperty(value = "UPSCALE(확대); VARIATION(변형); REROLL(재생성)", required = true,
 			allowableValues = "UPSCALE, VARIATION, REROLL", example = "UPSCALE")
 	private TaskAction action;
 
-	@ApiModelProperty(value = "序号(1~4), action为UPSCALE,VARIATION时必传", allowableValues = "range[1, 4]", example = "1")
+	@ApiModelProperty(value = "Index(1~4), required when action is UPSCALE or VARIATION (인덱스(1~4), action이 UPSCALE 또는 VARIATION일 때 필수)", allowableValues = "range[1, 4]", example = "1")
 	private Integer index;
 
 }

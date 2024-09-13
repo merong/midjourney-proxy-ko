@@ -8,19 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@ApiModel("提交结果")
+@ApiModel("Submit Result (제출 결과)")
 public class SubmitResultVO {
 
-	@ApiModelProperty(value = "状态码: 1(提交成功), 21(已存在), 22(排队中), other(错误)", required = true, example = "1")
+	@ApiModelProperty(value = "Status code: 1(Submission successful), 21(Already exists), 22(In queue), other(Error) (상태 코드: 1(제출 성공), 21(이미 존재함), 22(대기 중), 기타(오류))", required = true, example = "1")
 	private int code;
 
-	@ApiModelProperty(value = "描述", required = true, example = "提交成功")
+	@ApiModelProperty(value = "Description (설명)", required = true, example = "Submission successful")
 	private String description;
 
-	@ApiModelProperty(value = "任务ID", example = "1320098173412546")
+	@ApiModelProperty(value = "Task ID (작업 ID)", example = "1320098173412546")
 	private String result;
 
-	@ApiModelProperty(value = "扩展字段")
+	@ApiModelProperty(value = "Extended fields (확장 필드)")
 	private Map<String, Object> properties = new HashMap<>();
 
 	public SubmitResultVO setProperty(String name, Object value) {

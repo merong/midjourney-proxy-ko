@@ -12,39 +12,39 @@ import java.io.Serial;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("任务")
+@ApiModel("Task (작업)")
 public class Task extends DomainObject {
 	@Serial
 	private static final long serialVersionUID = -674915748204390789L;
 
-	@ApiModelProperty("任务类型")
+	@ApiModelProperty("Task Type (작업 유형)")
 	private TaskAction action;
-	@ApiModelProperty("任务状态")
+	@ApiModelProperty("Task Status (작업 상태)")
 	private TaskStatus status = TaskStatus.NOT_START;
 
-	@ApiModelProperty("提示词")
+	@ApiModelProperty("Prompt (프롬프트)")
 	private String prompt;
-	@ApiModelProperty("提示词-英文")
+	@ApiModelProperty("Prompt - English (프롬프트 - 영어)")
 	private String promptEn;
 
-	@ApiModelProperty("任务描述")
+	@ApiModelProperty("Task Description (작업 설명)")
 	private String description;
-	@ApiModelProperty("自定义参数")
+	@ApiModelProperty("Custom Parameters (사용자 정의 매개변수)")
 	private String state;
 
-	@ApiModelProperty("提交时间")
+	@ApiModelProperty("Submission Time (제출 시간)")
 	private Long submitTime;
-	@ApiModelProperty("开始执行时间")
+	@ApiModelProperty("Start Execution Time (실행 시작 시간)")
 	private Long startTime;
-	@ApiModelProperty("结束时间")
+	@ApiModelProperty("End Time (종료 시간)")
 	private Long finishTime;
 
-	@ApiModelProperty("图片url")
+	@ApiModelProperty("Image URL (이미지 URL)")
 	private String imageUrl;
 
-	@ApiModelProperty("任务进度")
+	@ApiModelProperty("Task Progress (작업 진행률)")
 	private String progress;
-	@ApiModelProperty("失败原因")
+	@ApiModelProperty("Failure Reason (실패 이유)")
 	private String failReason;
 
 	public void start() {

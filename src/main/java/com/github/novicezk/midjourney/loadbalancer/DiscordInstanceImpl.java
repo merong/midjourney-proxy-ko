@@ -117,18 +117,18 @@ public class DiscordInstanceImpl implements DiscordInstance {
 			this.queueTasks.add(task);
 		} catch (RejectedExecutionException e) {
 			this.taskStoreService.delete(task.getId());
-			return SubmitResultVO.fail(ReturnCode.QUEUE_REJECTED, "队列已满，请稍后尝试")
+			return SubmitResultVO.fail(ReturnCode.QUEUE_REJECTED, "Queue is full, please try again later (대기열이 가득 찼습니다. 나중에 다시 시도해 주세요)")
 					.setProperty(Constants.TASK_PROPERTY_DISCORD_INSTANCE_ID, this.getInstanceId());
 		} catch (Exception e) {
 			log.error("submit task error", e);
-			return SubmitResultVO.fail(ReturnCode.FAILURE, "提交失败，系统异常")
+			return SubmitResultVO.fail(ReturnCode.FAILURE, "Submission failed, system exception (제출 실패, 시스템 예외)")
 					.setProperty(Constants.TASK_PROPERTY_DISCORD_INSTANCE_ID, this.getInstanceId());
 		}
 		if (currentWaitNumbers == 0) {
-			return SubmitResultVO.of(ReturnCode.SUCCESS, "提交成功", task.getId())
+			return SubmitResultVO.of(ReturnCode.SUCCESS, "Submission successful (제출 성공)", task.getId())
 					.setProperty(Constants.TASK_PROPERTY_DISCORD_INSTANCE_ID, this.getInstanceId());
 		} else {
-			return SubmitResultVO.of(ReturnCode.IN_QUEUE, "排队中，前面还有" + currentWaitNumbers + "个任务", task.getId())
+			return SubmitResultVO.of(ReturnCode.IN_QUEUE, "In queue, " + currentWaitNumbers + " tasks ahead (대기 중, 앞에 " + currentWaitNumbers + "개의 작업이 있습니다)", task.getId())
 					.setProperty("numberOfQueues", currentWaitNumbers)
 					.setProperty(Constants.TASK_PROPERTY_DISCORD_INSTANCE_ID, this.getInstanceId());
 		}

@@ -9,14 +9,14 @@ import java.util.List;
 
 
 @Data
-@ApiModel("Imagine提交参数")
+@ApiModel("Imagine Submit Parameters (이미지 생성 제출 매개변수)")
 @EqualsAndHashCode(callSuper = true)
 public class SubmitImagineDTO extends BaseSubmitDTO {
 
-	@ApiModelProperty(value = "提示词", required = true, example = "Cat")
+	@ApiModelProperty(value = "Prompt (프롬프트)", required = true, example = "Cat")
 	private String prompt;
 
-	@ApiModelProperty(value = "垫图base64数组")
+	@ApiModelProperty(value = "Array of image base64 strings for image-to-image (이미지 변환용 base64 문자열 배열)")
 	private List<String> base64Array;
 
 	@ApiModelProperty(hidden = true)

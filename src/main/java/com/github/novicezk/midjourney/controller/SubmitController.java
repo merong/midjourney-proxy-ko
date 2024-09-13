@@ -44,7 +44,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Api(tags = "任务提交")
+@Api(tags = "과제제출")
 @RestController
 @RequestMapping("/submit")
 @RequiredArgsConstructor
@@ -54,12 +54,12 @@ public class SubmitController {
 	private final ProxyProperties properties;
 	private final TaskService taskService;
 
-	@ApiOperation(value = "提交Imagine任务")
+	@ApiOperation(value = "Imagine 작업 제출")
 	@PostMapping("/imagine")
 	public SubmitResultVO imagine(@RequestBody SubmitImagineDTO imagineDTO) {
 		String prompt = imagineDTO.getPrompt();
 		if (CharSequenceUtil.isBlank(prompt)) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "prompt不能为空");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "prompt비워둘 수 없습니다.");
 		}
 		prompt = prompt.trim();
 		Task task = newTask(imagineDTO);
@@ -69,7 +69,7 @@ public class SubmitController {
 		try {
 			BannedPromptUtils.checkBanned(promptEn);
 		} catch (BannedPromptException e) {
-			return SubmitResultVO.fail(ReturnCode.BANNED_PROMPT, "可能包含敏感词")
+			return SubmitResultVO.fail(ReturnCode.BANNED_PROMPT, "민감한 단어가 포함되어 있을 수 있습니다.")
 					.setProperty("promptEn", promptEn).setProperty("bannedWord", e.getMessage());
 		}
 		List<String> base64Array = Optional.ofNullable(imagineDTO.getBase64Array()).orElse(new ArrayList<>());
@@ -80,19 +80,19 @@ public class SubmitController {
 		try {
 			dataUrls = ConvertUtils.convertBase64Array(base64Array);
 		} catch (MalformedURLException e) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64格式错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64형식 오류");
 		}
 		task.setPromptEn(promptEn);
 		task.setDescription("/imagine " + prompt);
 		return this.taskService.submitImagine(task, dataUrls);
 	}
 
-	@ApiOperation(value = "绘图变化-simple")
+	@ApiOperation(value = "도면 변경-simple")
 	@PostMapping("/simple-change")
 	public SubmitResultVO simpleChange(@RequestBody SubmitSimpleChangeDTO simpleChangeDTO) {
 		TaskChangeParams changeParams = ConvertUtils.convertChangeParams(simpleChangeDTO.getContent());
 		if (changeParams == null) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "content参数错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "content매개변수 오류");
 		}
 		SubmitChangeDTO changeDTO = new SubmitChangeDTO();
 		changeDTO.setAction(changeParams.getAction());
@@ -103,14 +103,14 @@ public class SubmitController {
 		return change(changeDTO);
 	}
 
-	@ApiOperation(value = "绘图变化")
+	@ApiOperation(value = "도면 변경")
 	@PostMapping("/change")
 	public SubmitResultVO change(@RequestBody SubmitChangeDTO changeDTO) {
 		if (CharSequenceUtil.isBlank(changeDTO.getTaskId())) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "taskId不能为空");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "taskId비워둘 수 없습니다.");
 		}
 		if (!Set.of(TaskAction.UPSCALE, TaskAction.VARIATION, TaskAction.REROLL).contains(changeDTO.getAction())) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "action参数错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "action매개변수 오류");
 		}
 		String description = "/up " + changeDTO.getTaskId();
 		if (TaskAction.REROLL.equals(changeDTO.getAction())) {
@@ -120,13 +120,13 @@ public class SubmitController {
 		}
 		Task targetTask = this.taskStoreService.get(changeDTO.getTaskId());
 		if (targetTask == null) {
-			return SubmitResultVO.fail(ReturnCode.NOT_FOUND, "关联任务不存在或已失效");
+			return SubmitResultVO.fail(ReturnCode.NOT_FOUND, "연결된 작업이 존재하지 않거나 만료되었습니다.");
 		}
 		if (!TaskStatus.SUCCESS.equals(targetTask.getStatus())) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "关联任务状态错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "관련 작업 상태 오류");
 		}
 		if (!Set.of(TaskAction.IMAGINE, TaskAction.VARIATION, TaskAction.REROLL, TaskAction.BLEND).contains(targetTask.getAction())) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "关联任务不允许执行变化");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "연결된 작업은 실행 변경을 허용하지 않습니다.");
 		}
 		Task task = newTask(changeDTO);
 		task.setAction(changeDTO.getAction());
@@ -149,18 +149,18 @@ public class SubmitController {
 		}
 	}
 
-	@ApiOperation(value = "提交Describe任务")
+	@ApiOperation(value = "작업제출상세")
 	@PostMapping("/describe")
 	public SubmitResultVO describe(@RequestBody SubmitDescribeDTO describeDTO) {
 		if (CharSequenceUtil.isBlank(describeDTO.getBase64())) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64不能为空");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64비워둘 수 없습니다.");
 		}
 		IDataUrlSerializer serializer = new DataUrlSerializer();
 		DataUrl dataUrl;
 		try {
 			dataUrl = serializer.unserialize(describeDTO.getBase64());
 		} catch (MalformedURLException e) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64格式错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64형식 오류");
 		}
 		Task task = newTask(describeDTO);
 		task.setAction(TaskAction.DESCRIBE);
@@ -169,15 +169,15 @@ public class SubmitController {
 		return this.taskService.submitDescribe(task, dataUrl);
 	}
 
-	@ApiOperation(value = "提交Blend任务")
+	@ApiOperation(value = "Blend제출상세")
 	@PostMapping("/blend")
 	public SubmitResultVO blend(@RequestBody SubmitBlendDTO blendDTO) {
 		List<String> base64Array = blendDTO.getBase64Array();
 		if (base64Array == null || base64Array.size() < 2 || base64Array.size() > 5) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64List参数错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64List매개변수 오류");
 		}
 		if (blendDTO.getDimensions() == null) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "dimensions参数错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "dimensions매개변수 오류");
 		}
 		IDataUrlSerializer serializer = new DataUrlSerializer();
 		List<DataUrl> dataUrlList = new ArrayList<>();
@@ -187,7 +187,7 @@ public class SubmitController {
 				dataUrlList.add(dataUrl);
 			}
 		} catch (MalformedURLException e) {
-			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64格式错误");
+			return SubmitResultVO.fail(ReturnCode.VALIDATION_ERROR, "base64형식 오류");
 		}
 		Task task = newTask(blendDTO);
 		task.setAction(TaskAction.BLEND);

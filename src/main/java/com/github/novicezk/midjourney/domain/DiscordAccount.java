@@ -9,26 +9,26 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Discord账号")
+@ApiModel("Discord Account (Discord 계정)")
 public class DiscordAccount extends DomainObject {
 
-	@ApiModelProperty("服务器ID")
+	@ApiModelProperty("Server ID (서버 ID)")
 	private String guildId;
-	@ApiModelProperty("频道ID")
+	@ApiModelProperty("Channel ID (채널 ID)")
 	private String channelId;
-	@ApiModelProperty("用户Token")
+	@ApiModelProperty("User Token (사용자 토큰)")
 	private String userToken;
-	@ApiModelProperty("用户UserAgent")
+	@ApiModelProperty("User Agent (사용자 에이전트)")
 	private String userAgent = Constants.DEFAULT_DISCORD_USER_AGENT;
 
-	@ApiModelProperty("是否可用")
+	@ApiModelProperty("Is Available (사용 가능 여부)")
 	private boolean enable = true;
 
-	@ApiModelProperty("并发数")
+	@ApiModelProperty("Concurrency (동시 처리 수)")
 	private int coreSize = 3;
-	@ApiModelProperty("等待队列长度")
+	@ApiModelProperty("Queue Length (대기열 길이)")
 	private int queueSize = 10;
-	@ApiModelProperty("任务超时时间(分钟)")
+	@ApiModelProperty("Task Timeout (Minutes) (작업 시간 초과 (분))")
 	private int timeoutMinutes = 5;
 
 	@JsonIgnore

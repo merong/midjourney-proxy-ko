@@ -10,11 +10,11 @@ public class Message<T> {
 	private final T result;
 
 	public static <Y> Message<Y> success() {
-		return new Message<>(ReturnCode.SUCCESS, "成功");
+		return new Message<>(ReturnCode.SUCCESS, "Success (성공)");
 	}
 
 	public static <T> Message<T> success(T result) {
-		return new Message<>(ReturnCode.SUCCESS, "成功", result);
+		return new Message<>(ReturnCode.SUCCESS, "Success (성공)", result);
 	}
 
 	public static <T> Message<T> success(int code, String description, T result) {
@@ -22,15 +22,15 @@ public class Message<T> {
 	}
 
 	public static <Y> Message<Y> notFound() {
-		return new Message<>(ReturnCode.NOT_FOUND, "数据未找到");
+		return new Message<>(ReturnCode.NOT_FOUND, "Data not found (데이터를 찾을 수 없음)");
 	}
 
 	public static <Y> Message<Y> validationError() {
-		return new Message<>(ReturnCode.VALIDATION_ERROR, "校验错误");
+		return new Message<>(ReturnCode.VALIDATION_ERROR, "Validation error (유효성 검사 오류)");
 	}
 
 	public static <Y> Message<Y> failure() {
-		return new Message<>(ReturnCode.FAILURE, "系统异常");
+		return new Message<>(ReturnCode.FAILURE, "System exception (시스템 예외)");
 	}
 
 	public static <Y> Message<Y> failure(String description) {

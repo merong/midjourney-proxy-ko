@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 public abstract class BaseSubmitDTO {
 
-	@ApiModelProperty("自定义参数")
+	@ApiModelProperty("맞춤 매개변수")
 	protected String state;
 
-	@ApiModelProperty("回调地址, 为空时使用全局notifyHook")
+	@ApiModelProperty("콜백 주소, 비어 있으면 전역 사용 notifyHook")
 	protected String notifyHook;
 }
